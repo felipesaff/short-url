@@ -5,11 +5,13 @@ import com.auth0.jwt.algorithms.Algorithm;
 import com.auth0.jwt.exceptions.JWTVerificationException;
 import com.example.short_url.domain.user.User;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Service;
 
 import java.time.Instant;
 import java.time.LocalDateTime;
 import java.time.ZoneOffset;
 
+@Service
 public class TokenService {
 
     @Value("${api.security.token.secret}")
@@ -19,13 +21,11 @@ public class TokenService {
         try {
             Algorithm algorithm = Algorithm.HMAC256(secret);
 
-            String token = JWT.create()
+            return JWT.create()
                     .withIssuer("login-service")
                     .withSubject(user.getUsername())
                     .withExpiresAt(this.generateExpirationDate())
                     .sign(algorithm);
-
-            return token;
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
