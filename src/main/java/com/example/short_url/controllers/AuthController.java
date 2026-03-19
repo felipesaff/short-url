@@ -27,7 +27,9 @@ public class AuthController {
 
     @PostMapping("/login")
     public ResponseEntity<AuthResponseDTO> login(@RequestBody LoginRequestDTO body) {
-        User user = this.userRepository.findByUsername(body.username()).orElseThrow(() -> new RuntimeException("User not found"));
+        User user = this.userRepository
+                .findByUsername(body.username())
+                .orElseThrow(() -> new RuntimeException("User not found"));
         if(!passwordEncoder.matches(body.password(), user.getPassword())) {
             return ResponseEntity.badRequest().build();
         }
